@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+<script>
+    var path = 'C:\\Users\\jklib\\Desktop\\angular-1.5.8\\docs\\components\\bootstrap-3.1.1\\js\\bootstrap.js';
+
+    var reg = /((.:)(\\.+\\))((.+)(\..+))/;
+
+//    console.log(reg.exec(path));
+
+    var arr = ['1', 1, 1, 1, 4, 4, 5, 3, 2, 3, 4, [1, 2,], 7];
+
+    var obj = {};
+
+    var newArr = [];
+
+    for (var i = 0; i < arr.length; i++) {
+        var value = typeof arr[i] + arr[i];
+//        console.log(value);
+//        console.log(!obj[value]);
+        if(!obj[value]){
+            obj[value] = 1;
+            newArr.push(arr[i]);
+        }
+    }
+    console.log(obj);
+    console.log(newArr);
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

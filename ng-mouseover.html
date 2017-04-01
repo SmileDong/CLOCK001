@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="angular.js"></script>
+    <style>
+        #first{
+            width: 300px;
+            height: 300px;
+            border: 1px solid red;
+        }
+        .color{
+            background-color: green;
+        }
+    </style>
+</head>
+<body ng-app>
+    <div id="first" ng-mouseover="sign='color'" ng-mouseleave="sign=''" class="{{sign}}"></div>
+
+    <ul>
+        <li><div ng-click="show1=!show1">菜单</div>
+            <ul ng-show="show1">
+                <li>菜单1</li>
+                <li>菜单1</li>
+                <li>菜单1</li>
+                <li>菜单1</li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul>
+        <li><div ng-click="show2=!show2">菜单</div>
+            <ul  ng-show="show2">
+                <li>菜单1</li>
+                <li>菜单1</li>
+                <li>菜单1</li>
+                <li>菜单1</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="angular.js"></script>
+    <style>
+        #first {
+            width: 300px;
+            height: 100px;
+            border: 1px solid red;
+        }
+
+        #two {
+            width: 300px;
+            height: 100px;
+            border: 1px solid red;
+        }
+
+        .color {
+            background-color: green;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body ng-app="mainApp">
+<div id="first" ng-mouseover="sign = 'red'" ng-mouseleave="sign='green'" class="{{sign}}"></div>
+<br>
+
+<div id="two" ng-mouseover="isOk = true" ng-mouseleave="isOk = false" ng-class="{red:isOk,green:!isOk}"></div>
+<ul>
+    <li>
+        <div ng-click="a=!a">菜单</div>
+        <ul ng-show="a">
+            <li>菜单1</li>
+            <li>菜单1</li>
+            <li>菜单1</li>
+            <li>菜单1</li>
+        </ul>
+    </li>
+    <li>
+        <div ng-click="show2=!show2">菜单</div>
+        <ul ng-show="show2">
+            <li>菜单1</li>
+            <li>菜单1</li>
+            <li>菜单1</li>
+            <li>菜单1</li>
+        </ul>
+    </li>
+    <li>
+        <div ng-click="show3=!show3">菜单</div>
+        <ul ng-if="show3">
+            <li>菜单1</li>
+            <li>菜单1</li>
+            <li>菜单1</li>
+            <li>菜单1</li>
+        </ul>
+    </li>
+</ul>
+
+<ul>
+    <li ng-repeat="item in data" ng-class="{'A':'red','B':'yellow','C':'green'}[item.val]">{{item.name}}</li>
+
+
+</ul>
+
+</body>
+
+<script>
+    angular.module("mainApp", [])
+            .run(['$rootScope', function ($rootScope) {
+                $rootScope.data = [
+                    {
+                        name: '赵云',
+                        val: 'A'
+                    },
+                    {
+                        name: '赵云',
+                        val: 'B'
+                    },
+                    {
+                        name: '赵云',
+                        val: 'C'
+                    }
+                ]
+            }])
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
