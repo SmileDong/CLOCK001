@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="angular.js"></script>
+    <script src="http://jklib.org/ele/cdn/encode.js"></script>
+
+</head>
+<body ng-app="mainApp" ng-controller="myCon">
+<button ng-click="btn()">点击</button>
+<select ng-model="alphabet">
+    <option ng-repeat="item in list.alphabets" value="{{item}}">{{item}}</option>
+</select>
+<select ng-model="cityId" ng-change="show()">
+    <option value="{{item.id}}" ng-repeat="item in list.cities[alphabet]">{{item.name}}</option>
+</select>
+<br><br>
+<input type="text" ng-model="search" ng-keyup="keyup()"/>
+
+<ul>
+    <li ng-repeat="item in positions">
+
+        <div title="{{item|json}}" ng-click="food( item )">{{ item.name }}</div>
+    </li>
+</ul>
+
+
+<table border="1" width="600">
+    <tr ng-repeat="item in foods">
+        <td>{{item.name}}</td>
+        <td>{{item.phone}}</td>
+        <td><img ng-src="{{item.image_path|imgUrl}}" alt=""/></td>
+
+    </tr>
+</table>
+
+</body>
+
+<script>
+    var globl_data;
+    var geoHash;
+    angular.module("mainApp", [])
+            .filter("imgUrl", function () {
+                var m1 = /^(.)(..)/;
+                var m2 = /(jpeg|gig|png|jgp|bmp)$/;
+                return function (imgPath) {
+                    return "https://fuss10.elemecdn.com/" + imgPath.replace(m1, "$1/$2/").replace(m2, "$1.$1") + "?imageMogr2/thumbnail/70x70/format/webp/quality/85";
+                }
+            })
+            .controller("myCon", ["$scope", "$http", function ($scope, $http) {
+
+                $scope.btn = function () {
+                    $http({
+                        url: 'http://jklib.org/ele/cities.ashx',
+                        method: 'get'
+                    }).success(function (info) {
+                        globl_data = info;
+                        $scope.list = {
+                            alphabets: Object.keys(info),
+                            cities: info
+                        }
+                    })
+                };
+
+                $scope.show = function () {
+                    var city;
+                    var cities = globl_data[$scope.alphabet];
+                    for (var i = 0; i < cities.length; i++) {
+                        if (cities[i].id == $scope.cityId) {
+                            city = cities[i];
+                            break;
+                        }
+                    }
+                    geoHash = geohashObj.encode(city.latitude, city.longitude);
+                    console.log(geoHash);
+                }
+
+                $scope.keyup = function () {
+
+                    if (!$scope.search) return;
+                    $http({
+                        url: 'http://jklib.org/ele/pois.ashx?geohash=' + geoHash + "&keyword=" + $scope.search,
+                        method: 'get'
+                    }).success(function (info) {
+//                        console.log(info);
+                        $scope.positions = info
+                    })
+                }
+
+                $scope.food = function (item) {
+//                    console.log(item);
+
+                    var url = "http://jklib.org/ele/restaurants.ashx?geohash=" + item.geohash + "&latitude=" + item.latitude + "&longitude=" + item.longitude;
+
+                    $http.get(url).success(function (info) {
+                        $scope.foods = info;
+                    })
+                }
+            }])
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
