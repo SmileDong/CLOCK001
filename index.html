@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600" style="border:1px solid red"></canvas>
+</body>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    function Clock(obj) {
+        for (var key in obj) {
+            this[key] = obj[key];
+        }
+        this.ctx.font = this.fontSize + "" + this.fontFamily;
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = 'middle';
+        this.init();
+    }
+
+    Clock.prototype = {
+        constructor: Clock,
+        init: function () {
+            var that = this;
+            setInterval(function () {
+                that.ctx.clearRect(0, 0, that.ctx.canvas.width, that.ctx.canvas.height);
+                that.drawBig();
+                that.drawDial();
+                that.drawPoint();
+            }, 1000);
+
+        },
+        drawPoint: function () {
+            var date = new Date();
+
+            var second = date.getSeconds();
+            var trueS = second % 60;
+            var secondRadian = 2 * Math.PI / 60 * trueS - Math.PI / 2;
+            this.drawPointS(secondRadian, 100, "blue", 2);
+
+            var minute = date.getMinutes();
+            var disS = 2 * Math.PI * trueS / 60 / 60;
+            var trueMinute = minute % 60;
+            var MinuteRadin = 2 * Math.PI / 60 * trueMinute - Math.PI / 2 + disS;
+            this.drawPointS(MinuteRadin, 80, "green", 4);
+
+            var hour = date.getHours();
+            var disM = 2 * Math.PI * trueMinute / 60 / 12;
+            var trueHour = hour % 12;
+            var hourRadin = 2 * Math.PI / 12 * trueHour - Math.PI / 2 + disM;
+            this.drawPointS(hourRadin, 50, "red", 6);
+        },
+        drawPointS: function (hourRadin, length, color, width) {
+            var ctx = this.ctx;
+            var x = this.bigX + length * Math.cos(hourRadin);
+            var y = this.bigY + length * Math.sin(hourRadin);
+
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+            ctx.moveTo(this.bigX, this.bigY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        },
+        drawBig: function () {
+            var ctx = this.ctx;
+
+            ctx.strokeStyle = "green";
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(this.bigX, this.bigY, this.bigRadian, 0, 2 * Math.PI);
+            ctx.stroke();
+        },
+        drawDial: function () {
+            var dialR = 2 * Math.PI / 60;
+            var start = 0;
+            var ctx = this.ctx;
+            for (var i = 0; i < 60; i++) {
+                var radian = start + dialR * i;
+                var length = 0;
+                var bigRadian = this.bigRadian - 2;
+                if (i % 5 == 0) {
+                    length = this.bigLength;
+                    this.drawText(i / 5 + 1, radian);
+                    ctx.lineWidth = this.bigWidth;
+                } else {
+                    length = this.smallLength;
+                    ctx.lineWidth = this.smallWidth;
+                }
+                var startX = this.bigX + bigRadian * Math.cos(radian);
+                var startY = this.bigY + bigRadian * Math.sin(radian);
+                var endX = this.bigX + (bigRadian - length) * Math.cos(radian);
+                var endY = this.bigY + (bigRadian - length) * Math.sin(radian);
+
+                ctx.beginPath();
+                ctx.strokeStyle = "green";
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+            }
+        },
+        drawText: function (text, radian) {
+            var ctx = this.ctx;
+            var r = 120;
+            var radian = radian - Math.PI / 3;
+            var charX = this.bigX + r * Math.cos(radian);
+            var charY = this.bigY + r * Math.sin(radian);
+            ctx.beginPath();
+            ctx.font = "24px Microsoft yahei";
+            ctx.lineWidth= 1;
+            ctx.strokeText(text, charX, charY);
+        }
+    }
+
+    new Clock({
+        ctx: ctx,
+        bigX: 300,
+        bigY: 300,
+        bigRadian: 150,
+        bigLength: 14,
+        smallLength: 8,
+        bigWidth: 4,
+        smallWidth: 2,
+        fontSize: 20,
+        fontFamily: "microsoft yahei",
+        fontColor: "black",
+    })
+
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
