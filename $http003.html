@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="angular.js"></script>
+    <script src="http://jklib.org/ele/cdn/encode.js"></script>
+
+</head>
+<body ng-app="mainApp" ng-controller="mainCon">
+<button ng-click="click()">点击</button>
+<select ng-model='alphabet'>
+    <option value="{{item}}" ng-repeat="item in list.alphabets">{{item}}</option>
+</select>
+
+<select ng-change='show()' ng-model='cityId'>
+    <option value="{{item.id}}" ng-repeat="item in list.cities[alphabet]">{{item.name}}</option>
+</select><br><br>
+<input type="text" ng-model="search" ng-keyup="keyup()"/>
+<br>
+<ul>
+    <li ng-repeat="item in address">
+        <div title="{{item|json}}" ng-click="posClick(item)"> {{item.name}}</div>
+    </li>
+</ul>
+<br>
+<table border="1" width="700">
+    <tr ng-repeat="item in positions">
+        <td>{{item.name}}</td>
+        <td>{{item.phone}}</td>
+        <td><img ng-src="{{item.image_path |imgUrl}}" alt=""/></td>
+
+    </tr>
+</table>
+</body>
+
+<script>
+
+    var globl_data;
+    var getHash;
+    angular.module("mainApp", [])
+            .filter("imgUrl", function () {
+                var reg1 = /^(.)(..)/;
+                var reg2 = /(jpg|jpeg|gif|png|bmp)$/;
+                return function (imgPath) {
+                    return "https://fuss10.elemecdn.com/" + imgPath.replace(reg1, "$1/$2/").replace(reg2, "$1.$1") + "?imageMogr2/thumbnail/70x70/format/webp/quality/85"
+                };
+            })
+            .controller("mainCon", ["$scope", "$http", function ($scope, $http) {
+                $scope.click = function () {
+                    $http({
+                        url: 'http://jklib.org/ele/cities.ashx',
+                        method: 'get'
+                    }).success(function (info) {
+                        globl_data = info;
+                        $scope.list = {
+                            alphabets: Object.keys(info),
+                            cities: info
+                        }
+                    })
+                };
+                $scope.show = function () {
+                    var city;
+                    var citys = globl_data[$scope.alphabet];
+                    for (var i = 0; i < citys.length; i++) {
+                        if (citys[i].id = $scope.cityId) {
+                            city = citys[i];
+//                            console.log(cities[i].id);
+                            break;
+                        }
+                    }
+//                    console.log("纬度：" + city.latitude + ";经度：" + city.longitude);
+                    getHash = geohashObj.encode(city.latitude, city.longitude);
+                    console.log(city);
+                }
+                $scope.keyup = function () {
+                    if (!$scope.search) return;
+                    $http({
+                        url: 'http://jklib.org/ele/pois.ashx?geohash=' + getHash + "&keyword=" + $scope.search,
+                        method: 'get'
+                    }).success(function (info) {
+                        $scope.address = info;
+                    })
+                }
+
+                $scope.posClick = function (item) {
+                    $http({
+                        url: 'http://jklib.org/ele/restaurants.ashx?geohash=' + item.geohash + "&latitude=" + item.latitude + "&longitude=" + item.longitude,
+                        method: 'get'
+                    }).success(function (info) {
+                        console.log(info);
+                        $scope.positions = info;
+                    })
+                }
+            }])
+</script>
+</html>
